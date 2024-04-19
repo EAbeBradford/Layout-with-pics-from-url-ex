@@ -9,7 +9,9 @@ import javax.swing.*;
 public class SwingControlDemo implements ActionListener {
     private JFrame mainFrame;
     private JLabel statusLabel;
+    private JLabel imageLabel;
     private JPanel imagePanel;
+    private JPanel searchPanel;
     private JMenuBar mb;
     private JMenu file, edit, help;
     private JMenuItem cut, copy, paste, selectAll;
@@ -58,7 +60,7 @@ public class SwingControlDemo implements ActionListener {
         ta = new JTextArea("url: ");
         ta.setBounds(50, 5, WIDTH - 100, HEIGHT - 50);
         mainFrame.add(mb);  //add menu bar
-        mainFrame.add(ta, BorderLayout.NORTH);//add typing area
+
         mainFrame.setJMenuBar(mb); //set menu bar
 
         //  statusLabel = new JLabel("Label", JLabel.CENTER);
@@ -70,10 +72,17 @@ public class SwingControlDemo implements ActionListener {
             }
         });
         imagePanel = new JPanel();
+        searchPanel = new JPanel();
+        searchPanel.setLayout(new BorderLayout());
+        JButton okButton = new JButton("OK!!!!!!!!!");
+        okButton.setActionCommand("OK");
+        okButton.addActionListener(new ButtonClickListener());
+        searchPanel.add(okButton, BorderLayout.EAST);
+
+        searchPanel.add(ta, BorderLayout.CENTER);//add typing area
         //controlPanel.setLayout(); //set the layout of the pannel
 
-        //  mainFrame.add(controlPanel);
-        // mainFrame.add(statusLabel);
+        mainFrame.add(searchPanel, BorderLayout.NORTH);
         mainFrame.setVisible(true);
     }
 
@@ -91,33 +100,35 @@ public class SwingControlDemo implements ActionListener {
 
 
             URL url = new URL(path);
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.png"));
+            BufferedImage inputImageBuff = ImageIO.read(url.openStream());
+            // weiYing =
 
-            BufferedImage weiYing = ImageIO.read(url.openStream());
-           // weiYing =
-
-            ImageIcon WUXIAN;
-            if (weiYing != null) {
-                WUXIAN = new ImageIcon(weiYing.getScaledInstance(800, 700, Image.SCALE_SMOOTH));
-                JLabel imageLabel;// = new JLabel();
-                if (WUXIAN != null) {
-                    imageLabel = new JLabel(WUXIAN);
+            ImageIcon inputImage;
+            if (inputImageBuff != null) {
+                inputImage = new ImageIcon(inputImageBuff.getScaledInstance(800, 700, Image.SCALE_SMOOTH));
+                // = new JLabel();
+                if (inputImage != null) {
+                    imageLabel = new JLabel(inputImage);
                 } else {
-                    imageLabel = new JLabel("did not load");
+                    imageLabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
+
                 }
                 imagePanel.removeAll();
                 imagePanel.add(imageLabel);
                 mainFrame.add(imagePanel, BorderLayout.CENTER);
 
             }
+            else{
+                imageLabel =new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
+
+            }
 
         } catch (IOException e) {
             System.out.println(e);
             System.out.println("sadness");
-
-            // Image weiYing = ImageIO.read(url);
-            //System.out.println("hi");
-            BufferedImage myPicture = ImageIO.read(new File("WeiYing.png"));
-            JLabel imageLabel = new JLabel(new ImageIcon(myPicture.getScaledInstance(800, 700, Image.SCALE_SMOOTH)));
+            BufferedImage ErrorImage = ImageIO.read(new File("Error.png"));
+            JLabel imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
 
             imagePanel.removeAll();
             imagePanel.add(imageLabel);
@@ -125,15 +136,12 @@ public class SwingControlDemo implements ActionListener {
 
         }
 
-//        JButton okButton = new JButton("OK!!!!!!!!!");
 //        JButton submitButton = new JButton("Submit");
 //        JButton cancelButton = new JButton("Cancel");
 //
-//        okButton.setActionCommand("OK");
 //        submitButton.setActionCommand("Submit");
 //        cancelButton.setActionCommand("Cancel");
 //
-//        okButton.addActionListener(new ButtonClickListener());
 //        submitButton.addActionListener(new ButtonClickListener());
 //        cancelButton.addActionListener(new ButtonClickListener());
 //
@@ -161,11 +169,13 @@ public class SwingControlDemo implements ActionListener {
             String command = e.getActionCommand();
 
             if (command.equals("OK")) {
-                statusLabel.setText("Ok Button clicked.");
-            } else if (command.equals("Submit")) {
-                statusLabel.setText("Submit Button clicked.");
-            } else {
-                statusLabel.setText("Cancel Button clicked.");
+                try {
+                    imagePanel.removeAll();
+                    addImage();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                // statusLabel.setText("Ok Button clicked.");
             }
         }
     }
