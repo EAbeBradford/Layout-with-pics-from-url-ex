@@ -102,7 +102,7 @@ public class SwingControlDemo implements ActionListener {
             URL url = new URL(path);
             BufferedImage ErrorImage = ImageIO.read(new File("Error.png"));
             BufferedImage inputImageBuff = ImageIO.read(url.openStream());
-            // weiYing =
+
 
             ImageIcon inputImage;
             if (inputImageBuff != null) {
@@ -115,6 +115,8 @@ public class SwingControlDemo implements ActionListener {
 
                 }
                 imagePanel.removeAll();
+                imagePanel.repaint();
+
                 imagePanel.add(imageLabel);
                 mainFrame.add(imagePanel, BorderLayout.CENTER);
 
@@ -131,6 +133,7 @@ public class SwingControlDemo implements ActionListener {
             JLabel imageLabel = new JLabel(new ImageIcon(ErrorImage.getScaledInstance(800, 589, Image.SCALE_SMOOTH)));
 
             imagePanel.removeAll();
+            imagePanel.repaint();
             imagePanel.add(imageLabel);
             mainFrame.add(imagePanel);
 
